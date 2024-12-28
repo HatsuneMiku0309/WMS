@@ -1,6 +1,5 @@
 import { ILoginService, ILoginBody } from "./login.interface";
 import { IPgDb } from "../../db.interface";
-import * as crypto from 'crypto';
 import { Context } from "koa";
 import { Authentication } from "../authentication/authentication";
 import { IConfig } from "../../config.interface";
@@ -26,7 +25,10 @@ export class LoginService implements ILoginService {
                 throw new Error('Account or Password wrong!');
             }
             const row = rows[0];
-            let token = Authentication.signup(row, this._config);
+            let token = Authentication.signup({
+                id: row.id.toString(),
+                account: row.account
+            }, this._config);
 
             return {
                 data: row,
